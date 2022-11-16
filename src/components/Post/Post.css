@@ -1,0 +1,33 @@
+/* Add something specifc to product */
+
+
+.Edit {
+
+}
+
+.Edit label {
+    display: block;
+    color: grey;
+}
+
+.Edit button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    outline: none;
+    color: #fa923f;
+}
+
+.Edit button:hover,
+.Edit button:active {
+    color: #521751;
+}
+
+.Edit button.Delete {
+    color: red;
+}
+
+.Edit button.Delete:hover,
+.Edit button.Delete:active {
+    color: darkred;
+}

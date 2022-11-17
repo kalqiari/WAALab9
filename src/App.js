@@ -4,7 +4,7 @@ import Dashboard from "./pages/Dashboard";
 function App() {
   return (
       <div className="App">
-        <h1>WAA Lab 7 </h1>
+        <h1>WAA Lab 8 </h1>
         <Dashboard />
       </div>
   );

@@ -1,10 +1,13 @@
 import Posts from "../components/Posts/Posts";
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import PostDetails from "../components/PostDetails/PostDetails";
+import axios from "axios";
+import NewPost from "../components/NewPost/NewPost";
 
 
 export default function Dashboard() {
-    const [selectedState, setSelectedState] = useState(111);
+    const [selectedState, setSelectedState] = useState(null);
+    const [flagState, setFlagState] = useState(1);
     const titleRef = useRef(null);
     const [postsState, setPostsState] = useState(
         [
@@ -25,6 +28,16 @@ export default function Dashboard() {
         setPostsState(posts);
     }
 
+    useEffect(
+        () => { axios.get("http://localhost:8080/api/v1/posts")
+            .then((response) => {
+                setPostsState(response.data);
+            }).catch(error => {
+                console.log(error.message);
+            }) }, [flagState]
+
+    )
+
     return( <React.Fragment>
         <div>
             <div className="Post">
@@ -40,8 +53,10 @@ export default function Dashboard() {
                 <br/>
                 <button onClick={updateFirstPostTitle}>Change Title</button>
             </div>
-            <PostDetails  selectedPost= { postsState.find(e => e.id === selectedState)} />
+            <PostDetails  selectedId= {selectedState} />
             <div>
+                <NewPost flag={flagState} setFlagState= { setFlagState}></NewPost>
+
             </div>
         </div>
 

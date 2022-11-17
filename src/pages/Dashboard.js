@@ -32,6 +32,7 @@ export default function Dashboard() {
         () => { axios.get("http://localhost:8080/api/v1/posts")
             .then((response) => {
                 setPostsState(response.data);
+                setSelectedState(null);
             }).catch(error => {
                 console.log(error.message);
             }) }, [flagState]
@@ -53,7 +54,7 @@ export default function Dashboard() {
                 <br/>
                 <button onClick={updateFirstPostTitle}>Change Title</button>
             </div>
-            <PostDetails  selectedId= {selectedState} />
+            <PostDetails  selectedId= {selectedState} flag={flagState} setFlagState= { setFlagState} />
             <div>
                 <NewPost flag={flagState} setFlagState= { setFlagState}></NewPost>
 

@@ -3,11 +3,12 @@ import React, {useEffect, useRef, useState} from "react";
 import PostDetails from "../components/PostDetails/PostDetails";
 import axios from "axios";
 import NewPost from "../components/NewPost/NewPost";
+import {PostContext} from "../context/PostContext";
 
 
 export default function Dashboard() {
-    const [selectedState, setSelectedState] = useState(null);
-    const [flagState, setFlagState] = useState(1);
+    const [selectedId, setSelectedId] = useState(null);
+    const [flagState, setFlagState] = useState(false);
     const titleRef = useRef(null);
     const [postsState, setPostsState] = useState(
         [
@@ -18,49 +19,51 @@ export default function Dashboard() {
     );
 
     const setSelected = (id) => {
-        setSelectedState(id);
+        setSelectedId(id);
     }
 
-    const updateFirstPostTitle = () =>
-    {
-       let posts = [...postsState];
+    const updateFirstPostTitle = () => {
+        let posts = [...postsState];
         posts[0].title = titleRef.current.value;
         setPostsState(posts);
     }
 
     useEffect(
-        () => { axios.get("http://localhost:8080/api/v1/posts")
-            .then((response) => {
-                setPostsState(response.data);
-                setSelectedState(null);
-            }).catch(error => {
+        () => {
+            axios.get("http://localhost:8080/api/v1/posts")
+                .then((response) => {
+                    setPostsState(response.data);
+                    setSelectedId(null);
+                }).catch(error => {
                 console.log(error.message);
-            }) }, [flagState]
-
+            })
+        }, [flagState]
     )
 
-    return( <React.Fragment>
-        <div>
-            <div className="Post">
-                <Posts
-                    posts={postsState}
-                    setSelected={setSelected}
-                />
+    return (<React.Fragment>
+            <PostContext.Provider value={selectedId}>
+                <div>
+                    <div className="Post">
+                        <Posts
+                            posts={postsState}
+                            setSelected={setSelected}
+                        />
 
-            </div>
-            <br/>
-            <div>
-                <input type="text" ref={titleRef} style={{ padding: '10px', marginBottom: '10px' }}></input>
-                <br/>
-                <button onClick={updateFirstPostTitle}>Change Title</button>
-            </div>
-            <PostDetails  selectedId= {selectedState} flag={flagState} setFlagState= { setFlagState} />
-            <div>
-                <NewPost flag={flagState} setFlagState= { setFlagState}></NewPost>
+                    </div>
+                    <br/>
+                    <div>
+                        <input type="text" ref={titleRef} style={{padding: '10px', marginBottom: '10px'}}></input>
+                        <br/>
+                        <button onClick={updateFirstPostTitle}>Change Title</button>
+                    </div>
+                    <PostDetails flag={flagState} setFlagState={setFlagState}/>
+                    <div>
+                        <NewPost flag={flagState} setFlagState={setFlagState}></NewPost>
 
-            </div>
-        </div>
+                    </div>
+                </div>
+            </PostContext.Provider>
 
-    </React.Fragment>
+        </React.Fragment>
     );
 }

@@ -1,20 +1,21 @@
 import './PostDetails.css';
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import Comment from "../Comment/Comment";
+import {PostContext} from "../../context/PostContext";
 
 
 const PostDetails = (props) => {
-
+    const postContext = useContext(PostContext);
     const [selectedPost, setSelectedPost] = useState(null);
      const [postComments, setPostComments] = useState([]);
     useEffect(
         () => {
-            if (props.selectedId) {
-                axios.get("http://localhost:8080/api/v1/posts/" + props.selectedId)
+            if (postContext) {
+                axios.get("http://localhost:8080/api/v1/posts/" + postContext)
                     .then((response) => {
                         setSelectedPost(response.data);
-                        axios.get("http://localhost:8080/api/v1/posts/" + props.selectedId +"/comments").then(rs => {
+                        axios.get("http://localhost:8080/api/v1/posts/" + postContext +"/comments").then(rs => {
                             setPostComments(rs.data);
                         }).catch(error => {
                             console.log(error.message);
@@ -25,20 +26,20 @@ const PostDetails = (props) => {
                     console.log(error.message);
                 })
             }
-        }, [props.selectedId]
+        }, [postContext]
     )
 
     const deleteHandler = () => {
-        if (props.selectedId) {
-            axios.delete("http://localhost:8080/api/v1/posts/" + props.selectedId).then(response => {
-                props.setFlagState(props.flag + 1);
+        if (postContext) {
+            axios.delete("http://localhost:8080/api/v1/posts/" + postContext).then(response => {
+                props.setFlagState(!props.flag);
             }).catch(error => {
                 console.log(error.message);
             })
         }
     }
 
-    if (props.selectedId && selectedPost) {
+    if (postContext && selectedPost) {
         return (
             <div className="PostDetail">
 
